@@ -27,12 +27,6 @@ Extended Supplementary Material:
 > Caleb M. Gordon, Lisa S. Freisem, Christopher T. Griffin, Jacques A. Gauthier, Bhart-Anjan S. Bhullar. (2025). Extended Supplementary Information, Data Tables, and R Scripts for Gordon et al. 2025: ‘‘Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes’’ Figshare. [https://doi.org/10.6084/m9.figshare.30395887](https://doi.org/10.6084/m9.figshare.30395887).
 
 ## Project Motivation
-<img src="explanatory_images/project_rationale_diagram.png"
-     alt="Figure illustrating the motivation for this study"
-     width="600"
-     align="right"
-     style="margin-right: 15px; margin-left: 15px; margin-top: 5px; margin-bottom: 10px; border: 5px solid #555;">
-     
 Mammals ( 🦘 🐀 🦍 ) and reptiles ( 🦎 🐢 🐊 🦅 ) are ancestrally land-dwelling or terrestrial ( ⛰️ ) animals. And yet, over the last 300 million years, dozens of mammal and reptile lineages have independently adapted to life in the water ( 🌊 ). The most aquatically specialized of these groups have limb  💪  morphologies that suggest a fully marine lifestyle, but their transitional, semi-aquatic ancestors have more ambiguous morphologies, making it difficult to determine which fossil species were aquatic and resolve precisely how aquatic they were. Predicted soft-tissue limb features, such as webbed hands/feet and flippers, offer promise to help discern the semi-aquatic habits of extinct species, and various morphometric 📐 and osteological 🦴 features have been linked to aquatic habits, interdigital webbing, or flippers over the years, but none of these purportedly predictive features have been validated using phylogenetic comparative methods——that is, in a way that takes into account how these animals are all related to one another.
 
 Validating these purportedly predictive features is a challenge, because it's often unclear where many of these groups go on the amniote family tree 👪 🪾 and how their constituent subclades are related. 
@@ -41,12 +35,12 @@ In addition, for several extinct clades with disputed aquatic habits, different 
 
 For this project, we developed an approach that could deal with these phylogenetic 🪾 uncertainties, validate ✅ various previously proposed morphometric predictors of aquatic habits and flippers, select the best 🏆 of multiple conflicting predictors for these features when they disagree, and use these best predictors to figure out 🔮 exactly which extinct species in each of these groups had highly/fully aquatic habits and flippers.
 
+<img src="explanatory_images/project_rationale_diagram.png"
+     alt="Figure illustrating the motivation for this study"
+     width="750"
+     style="margin: auto; border: 5px solid #555;">
+
 ## Overview of Approach
-<img src="explanatory_images/approach_overview_diagram.png"
-     alt="Overview of approach used in this study"
-     width="600"
-     align="right"
-     style="margin-right: 15px; margin-left: 15px; margin-top: 20px; margin-bottom: 10px; border: 5px solid #555;">
 
 #### 1. <u>We measured modern and extinct tetrapod limbs</u>.
 - We generated a morphometric dataset of 11,410 original linear measurements on n = 747 tetrapod specimens and 5,611 landmarks placed on n = 256 tetrapod specimens. 
@@ -60,14 +54,19 @@ For this project, we developed an approach that could deal with these phylogenet
 - We compared measurements across aquatic affinity and limb phenotype bins, and trained logistic regression models to predict them.
 - We compared the accuracies of these models using __ROC analysis__, and used the best models to make predictions in extinct species.
 
+<img src="explanatory_images/approach_overview_diagram.png"
+     alt="Overview of approach used in this study"
+     width="750"
+     style="margin: auto; border: 5px solid #555;">
+
 ## Phylogenetic ROC Analysis
 We used measurements for specimens with known phenotypes to train and test __phylogenetic binomial logistic regression__ models. We then compared the predictive accuracies of these models for each morphometric feature across the whole dataset and for individual clades within our dataset using __Receiver-Operating Characteristic (ROC)__ curve analysis——a collection of methods that was originally developed by the U.S. Army Signal Corps in World War II. We provide more information about ROC analysis in the STAR Methods of [our original paper](https://doi.org/10.1016/j.cub.2025.10.068). For a quick and excellent overview of this method, we highly recommend checking out [Tom Fawcett's 2006 introduction to ROC analysis](https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub). 
 
 <img src="explanatory_images/ROC_overview_diagram.png"
      alt="Figure illustrating the motivation for this study"
-     width="650"
-     align="right"
-     style="margin-right: 15px; margin-left: 15px; margin-top: 5px; margin-bottom: 10px; border: 5px solid #555;">
+     align=center
+     width="750"
+     style="margin: auto; border: 5px solid #555;">
 
 ROC analysis is just a way to richly compare the predictive performance of multiple machine-learning models in different contexts and pick their best predicted probability thesholds for assigning classifications.
 
@@ -77,13 +76,13 @@ You can compare the predictive accuracies of two or more machine-learning models
 
 Each ROC curve represents a single predictive model, and each point on the curve represents a different classification threshold:
 
-<video src="explanatory_images/ROC_animation.mov"
+<video src="explanatory_images/ROC_animation.mp4"
        autoplay
        loop
        muted
        playsinline
-       width="964"
-       style="margin-right: 10px; margin-left: 0px; border: 5px solid #555;">
+       width="750"
+       style="margin: auto; border: 5px solid #555;">
 </video>
 
 #### Dealing with Phylogenetic Uncertainty 👪 🪾
@@ -92,9 +91,8 @@ As we described above, there's a lot of debate about how various groups of mamma
 
 <img src="explanatory_images/phyloROC_workflow.png"
      alt="Figure illustrating the workflow of phylogenetic ROC analysis as used in this study"
-     width="650"
-     align="right"
-     style="margin-right: 15px; margin-left: 15px; margin-top: 20px; margin-bottom: 10px; border: 5px solid #555;">
+     width="700"
+     style="margin: auto; border: 5px solid #555;">
 
 #### Fitting Phylogenetic ROC Curves 🪾📈
  
@@ -131,24 +129,21 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 - [__script_S3_joblist.txt__](job_arrays/script_S3_joblist.txt): This plain-text file contains the job array specified in BASH_script_S3.
 - [__script_S4_joblist.txt__](job_arrays/script_S4_joblist.txt): This plain-text file contains the job array specified in BASH_script_S4.
 
-
-#### <u>These scripts make use of the following input data</u>:
-
 <img src="explanatory_images/tree_topologies_table.png"
      alt="Figure illustrating the data analysis pipeline used for this study"
-     width="500"
-     align="right"
-     style="margin-right: 50px; margin-left: 50px; margin-top: 5px; margin-bottom: 10px; border: 5px solid #555;">
+     width="700"
+     style="margin: auto; border: 5px solid #555;">
 
-- Input tree files (plain-text files in Newick format, representing alternative tree topologies summarized in the table on the right):
-  - [__supertree1.txt__](input_data/input_trees/Newick_files/supertree1.txt)
-  - [__supertree2.txt__](input_data/input_trees/Newick_files/supertree2.txt)
-  - [__supertree3.txt__](input_data/input_trees/Newick_files/supertree3.txt)
-  - [__supertree4.txt__](input_data/input_trees/Newick_files/supertree4.txt)
-  - [__supertree5.txt__](input_data/input_trees/Newick_files/supertree5.txt)
-  - [__supertree6.txt__](input_data/input_trees/Newick_files/supertree6.txt)
-  - [__supertree7.txt__](input_data/input_trees/Newick_files/supertree7.txt)
-  - [__supertree8.txt__](input_data/input_trees/Newick_files/supertree8.txt)
+#### <u>These scripts make use of the following input data</u>:
+- Input tree files (plain-text files in Newick format, representing alternative tree topologies for Pan-Reptilia):
+  - [__supertree1.txt__](input_data/input_trees/Newick_files/supertree1.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, monophyletic Parareptilia at base of Pan-Reptilia, and molecular topology of Squamata
+  - [__supertree2.txt__](input_data/input_trees/Newick_files/supertree2.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, Captorhinidae at base of Pan-Reptilia, and molecular topology of Squamata
+  - [__supertree3.txt__](input_data/input_trees/Newick_files/supertree3.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, monophyletic Parareptilia at base of Pan-Reptilia, and morphological topology of Squamata
+  - [__supertree4.txt__](input_data/input_trees/Newick_files/supertree4.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, Captorhinidae at base of Pan-Reptilia, and morphological topology of Squamata
+  - [__supertree5.txt__](input_data/input_trees/Newick_files/supertree5.txt): Tree assuming monophyletic Saurosphargidae at base of Sauropterygiformes, monophyletic Parareptilia at base of Pan-Reptilia, and molecular topology of Squamata
+  - [__supertree6.txt__](input_data/input_trees/Newick_files/supertree6.txt): Tree assuming monophyletic Saurosphargidae at base of Sauropterygiformes, Captorhinidae at base of Pan-Reptilia, and molecular topology of Squamata
+  - [__supertree7.txt__](input_data/input_trees/Newick_files/supertree7.txt): Tree assuming monophyletic Saurosphargidae at base of Sauropterygiformes, monophyletic Parareptilia at base of Pan-Reptilia, and morphological topology of Squamata
+  - [__supertree8.txt__](input_data/input_trees/Newick_files/supertree8.txt): Tree assuming monophyletic Saurosphargidae at base of Sauropterygiformes, Captorhinidae at base of Pan-Reptilia, and morphological topology of Squamata
 
 - Input data tables required to begin the analysis:
   - [__Table_S01.csv__](input_data/Table_S01.csv): All linear-morphometric, limb-phenotype, and aquatic-affinity data
@@ -170,6 +165,5 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 
 <img src="explanatory_images/data_analysis_pipeline.png"
      alt="Figure illustrating the data analysis pipeline used for this study"
-     width="800"
-     align="center"
-     style="margin-right: 50px; margin-left: 50px; margin-top: 5px; margin-bottom: 10px; border: 5px solid #555;">
+     width="700"
+     style="margin: auto; border: 5px solid #555;">
