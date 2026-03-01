@@ -29,13 +29,15 @@ Extended Supplementary Material:
 ## Project Motivation
 <img src="explanatory_images/project_rationale_diagram.png"
      alt="Figure illustrating the motivation for this study"
-     width="450"
+     width="600"
      align="right"
      style="margin-right: 15px; margin-left: 15px; margin-top: 5px; margin-bottom: 10px; border: 5px solid #555;">
      
 Mammals ( 🦘 🐀 🦍 ) and reptiles ( 🦎 🐢 🐊 🦅 ) are ancestrally land-dwelling or terrestrial ( ⛰️ ) animals. And yet, over the last 300 million years, dozens of mammal and reptile lineages have independently adapted to life in the water ( 🌊 ). The most aquatically specialized of these groups have limb  💪  morphologies that suggest a fully marine lifestyle, but their transitional, semi-aquatic ancestors have more ambiguous morphologies, making it difficult to determine which fossil species were aquatic and resolve precisely how aquatic they were. Predicted soft-tissue limb features, such as webbed hands/feet and flippers, offer promise to help discern the semi-aquatic habits of extinct species, and various morphometric 📐 and osteological 🦴 features have been linked to aquatic habits, interdigital webbing, or flippers over the years, but none of these purportedly predictive features have been validated using phylogenetic comparative methods——that is, in a way that takes into account how these animals are all related to one another.
 
-Validating these purportedly predictive features is a challenge, because it's often unclear where many of these groups go on the amniote family tree 👪 🪾 and how their constituent subclades are related to one another. In addition, for several extinct clades with disputed aquatic habits, different lines of evidence have suggested conflicting  ⚔️  interpretations of their aquatic habits, leaving us with no objective means for favoring one line of evidence (one predictive feature) over another when they disagree.
+Validating these purportedly predictive features is a challenge, because it's often unclear where many of these groups go on the amniote family tree 👪 🪾 and how their constituent subclades are related. 
+
+In addition, for several extinct clades with disputed aquatic habits, different lines of evidence have suggested conflicting  ⚔️  interpretations of their aquatic habits, leaving us with no objective means for favoring one line of evidence (one predictive feature) over another when they disagree.
 
 For this project, we developed an approach that could deal with these phylogenetic 🪾 uncertainties, validate ✅ various previously proposed morphometric predictors of aquatic habits and flippers, select the best 🏆 of multiple conflicting predictors for these features when they disagree, and use these best predictors to figure out 🔮 exactly which extinct species in each of these groups had highly/fully aquatic habits and flippers.
 
@@ -44,17 +46,17 @@ For this project, we developed an approach that could deal with these phylogenet
      alt="Overview of approach used in this study"
      width="600"
      align="right"
-     style="margin-right: 15px; margin-left: 15px; margin-top: 10px; margin-bottom: 10px; border: 5px solid #555;">
+     style="margin-right: 15px; margin-left: 15px; margin-top: 20px; margin-bottom: 10px; border: 5px solid #555;">
 
 #### 1. <u>We measured modern and extinct tetrapod limbs</u>.
-- We generated a linear morphometric dataset of 11,410 original linear measurements on n = 747 tetrapod specimens, and a geometric morphometric dataset of 5,611 landmarks placed on n = 256 tetrapod specimens. 
-- We measured specimens either in person with calipers or digitally from 2D images or 3D meshes or scans.
+- We generated a morphometric dataset of 11,410 original linear measurements on n = 747 tetrapod specimens and 5,611 landmarks placed on n = 256 tetrapod specimens. 
+- We measured specimens either in person with calipers or digitally from 2D or 3D images.
 
 #### 2. <u>We scored specimens with known aquatic habits and soft-tissue phenotypes</u>.
 - We devised a scoring system for aquatic habits and soft-tissue limb phenotypes that could be applied consistently across amniotes.
 - Using this system, we assigned aquatic affinity scores and soft-tissue limb phenotypes to all taxa in our dataset for which these values could be determined prior to analysis (e.g., by direct observation or from the literature).
 
-#### 3. <u>We used these measurements and character scores to train models that could predict similar scores in extinct taxa with disputed phenotypes</u>.
+#### 3. <u>We used these data to train models that could predict similar phenotypes in extinct taxa</u>.
 - We compared measurements across aquatic affinity and limb phenotype bins, and trained logistic regression models to predict them.
 - We compared the accuracies of these models using __ROC analysis__, and used the best models to make predictions in extinct species.
 
@@ -92,7 +94,7 @@ As we described above, there's a lot of debate about how various groups of mamma
      alt="Figure illustrating the workflow of phylogenetic ROC analysis as used in this study"
      width="650"
      align="right"
-     style="margin-right: 15px; margin-left: 15px; margin-top: 5px; margin-bottom: 10px; border: 5px solid #555;">
+     style="margin-right: 15px; margin-left: 15px; margin-top: 20px; margin-bottom: 10px; border: 5px solid #555;">
 
 #### Fitting Phylogenetic ROC Curves 🪾📈
  
