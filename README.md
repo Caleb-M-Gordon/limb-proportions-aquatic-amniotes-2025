@@ -129,11 +129,6 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 - [__script_S3_joblist.txt__](job_arrays/script_S3_joblist.txt): This plain-text file contains the job array specified in BASH_script_S3.
 - [__script_S4_joblist.txt__](job_arrays/script_S4_joblist.txt): This plain-text file contains the job array specified in BASH_script_S4.
 
-<img src="explanatory_images/tree_topologies_table.png"
-     alt="Figure illustrating the data analysis pipeline used for this study"
-     width="700"
-     style="margin: auto; border: 5px solid #555;">
-
 #### <u>These scripts make use of the following input data</u>:
 - Input tree files (plain-text files in Newick format, representing alternative tree topologies for Pan-Reptilia):
   - [__supertree1.txt__](input_data/input_trees/Newick_files/supertree1.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, monophyletic Parareptilia at base of Pan-Reptilia, and molecular topology of Squamata
