@@ -35,10 +35,12 @@ In addition, for several extinct clades with disputed aquatic habits, different 
 
 For this project, we developed an approach that could deal with these phylogenetic 🪾 uncertainties, validate ✅ various previously proposed morphometric predictors of aquatic habits and flippers, select the best 🏆 of multiple conflicting predictors for these features when they disagree, and use these best predictors to figure out 🔮 exactly which extinct species in each of these groups had highly/fully aquatic habits and flippers.
 
-<img src="explanatory_images/project_rationale_diagram.png"
-     alt="Figure illustrating the motivation for this study"
-     width="750"
-     style="margin: auto; border: 5px solid #555;">
+<p align="center">
+     <img src="explanatory_images/project_rationale_diagram.png"
+          alt="Figure illustrating the motivation for this study"
+          width="750"
+          style="margin: auto; border: 5px solid #555;">
+</p>
 
 ## Overview of Approach
 
@@ -54,20 +56,24 @@ For this project, we developed an approach that could deal with these phylogenet
 - We compared measurements across aquatic affinity and limb phenotype bins, and trained logistic regression models to predict them.
 - We compared the accuracies of these models using __ROC analysis__, and used the best models to make predictions in extinct species.
 
-<img src="explanatory_images/approach_overview_diagram.png"
+<p align="center">
+     <img src="explanatory_images/approach_overview_diagram.png"
      alt="Overview of approach used in this study"
      width="750"
      style="margin: auto; border: 5px solid #555;">
+</p>
 
 ## Phylogenetic ROC Analysis
 We used measurements for specimens with known phenotypes to train and test __phylogenetic binomial logistic regression__ models. We then compared the predictive accuracies of these models for each morphometric feature across the whole dataset and for individual clades within our dataset using __Receiver-Operating Characteristic (ROC)__ curve analysis——a collection of methods that was originally developed by the U.S. Army Signal Corps in World War II. We provide more information about ROC analysis in the STAR Methods of [our original paper](https://doi.org/10.1016/j.cub.2025.10.068). For a quick and excellent overview of this method, we highly recommend checking out [Tom Fawcett's 2006 introduction to ROC analysis](https://www.sciencedirect.com/science/article/abs/pii/S016786550500303X?via%3Dihub). 
 
-<img src="explanatory_images/ROC_overview_diagram.png"
+<p align="center">
+     <img src="explanatory_images/ROC_overview_diagram.png"
      alt="Figure illustrating the motivation for this study"
      align=center
      width="750"
      style="margin: auto; border: 5px solid #555;">
-
+</p>
+     
 ROC analysis is just a way to richly compare the predictive performance of multiple machine-learning models in different contexts and pick their best predicted probability thesholds for assigning classifications.
 
 It centers around the __ROC curve__—a plot of __true positive rate (TPR)__ vs. __false positive rate (FPR)__ values for a particular predictive model whose coordinates differ depending on the predicted probability threshold for classifying a binary response variable.
@@ -76,9 +82,11 @@ You can compare the predictive accuracies of two or more machine-learning models
 
 Each ROC curve represents a single predictive model, and each point on the curve represents a different classification threshold:
 
-<img src="explanatory_images/ROC_animation.gif"
+<p align="center">
+     <img src="explanatory_images/ROC_animation.gif"
        width="750"
        style="margin: auto; border: 5px solid #555;">
+</p>
 
 Here's a [link](https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amniotes-2025/blob/main/explanatory_images/ROC_animation.mp4) to the video above relating logistic regression and ROC curves, in case it doesn't appear inline in the README.
 
@@ -86,10 +94,12 @@ Here's a [link](https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amnio
 
 As we described above, there's a lot of debate about how various groups of mammals and reptiles are related to one another. To perform phylogenetic comparative tests that could account for this uncertainty, we assembled 8 alternative maximally agnostic __supertrees__ relating all sampled species. These supertrees considered 3 pairs of competing phylogenetic hypotheses about how the various groups of amniotes in the dataset were related to one another. During each run of our analysis (whenever we trained a predictive model), we spontaneously collapsed each of these trees 10,000 times to remove polytomies and make the tree fully dichotomous, and repeated the model-training process once for each of these collapsed trees, so that we repeated the fitting procedure 10k times per run.
 
-<img src="explanatory_images/phyloROC_workflow.png"
+<p align="center">
+     <img src="explanatory_images/phyloROC_workflow.png"
      alt="Figure illustrating the workflow of phylogenetic ROC analysis as used in this study"
      width="750"
      style="margin: auto; border: 5px solid #555;">
+</p>
 
 #### Fitting Phylogenetic ROC Curves 🪾📈
  
@@ -155,7 +165,9 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 
 #### To repeat this analysis, please follow the steps illustrated below. 
 
-<img src="explanatory_images/data_analysis_pipeline.png"
+<p align="center">
+     <img src="explanatory_images/data_analysis_pipeline.png"
      alt="Figure illustrating the data analysis pipeline used for this study"
      width="700"
      style="margin: auto; border: 5px solid #555;">
+</p>
