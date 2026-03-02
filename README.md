@@ -76,11 +76,9 @@ You can compare the predictive accuracies of two or more machine-learning models
 
 Each ROC curve represents a single predictive model, and each point on the curve represents a different classification threshold:
 
-<p align="center">
-  <img src="explanatory_images/ROC_animation.gif"
+<img src="explanatory_images/ROC_animation.gif"
        width="750"
-       style="border: 5px solid #555;">
-</p>
+       style="margin: auto; border: 5px solid #555;">
 
 Here's a [link](https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amniotes-2025/blob/main/explanatory_images/ROC_animation.mp4) to the video above relating logistic regression and ROC curves, in case it doesn't appear inline in the README.
 
