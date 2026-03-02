@@ -76,14 +76,12 @@ You can compare the predictive accuracies of two or more machine-learning models
 
 Each ROC curve represents a single predictive model, and each point on the curve represents a different classification threshold:
 
-<video src="explanatory_images/ROC_animation.mp4"
-       autoplay
-       loop
-       muted
-       playsinline
-       width="750"
-       style="margin: auto; border: 5px solid #555;">
+<video autoplay loop muted playsinline width="750" controls>
+  <source src="explanatory_images/ROC_animation.mp4" type="video/mp4">
+  Your browser does not support the video tag.
 </video>
+
+<p><a href="explanatory_images/ROC_animation.mp4">Open the video</a></p>
 
 #### Dealing with Phylogenetic Uncertainty 👪 🪾
 
