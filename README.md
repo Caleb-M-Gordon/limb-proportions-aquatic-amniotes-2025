@@ -76,13 +76,13 @@ You can compare the predictive accuracies of two or more machine-learning models
 
 Each ROC curve represents a single predictive model, and each point on the curve represents a different classification threshold:
 
-<video autoplay loop muted playsinline width="750" controls style="border: 5px solid #555;">
-  <source src="[https://github.com/user-attachments/assets/3e2c3094-a98d-4eff-8213-ac0e66840338](https://github.com/user-attachments/assets/3e2c3094-a98d-4eff-8213-ac0e66840338)" type="video/mp4">
-</video>
+<p align="center">
+  <img src="explanatory_images/ROC_animation.gif"
+       width="750"
+       style="border: 5px solid #555;">
+</p>
 
 Here's a [link](https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amniotes-2025/blob/main/explanatory_images/ROC_animation.mp4) to the video above relating logistic regression and ROC curves, in case it doesn't appear inline in the README.
-
-<p><a href="explanatory_images/ROC_animation.mp4">Open the video</a></p>
 
 #### Dealing with Phylogenetic Uncertainty 👪 🪾
 
@@ -90,7 +90,7 @@ As we described above, there's a lot of debate about how various groups of mamma
 
 <img src="explanatory_images/phyloROC_workflow.png"
      alt="Figure illustrating the workflow of phylogenetic ROC analysis as used in this study"
-     width="700"
+     width="750"
      style="margin: auto; border: 5px solid #555;">
 
 #### Fitting Phylogenetic ROC Curves 🪾📈
