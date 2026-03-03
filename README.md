@@ -90,7 +90,7 @@ Each ROC curve represents a single predictive model, and each point on the curve
 
 Here's a [link](https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amniotes-2025/blob/main/explanatory_images/ROC_animation.mp4) to the video above relating logistic regression and ROC curves, in case it doesn't appear inline in the README.
 
-#### Dealing with Phylogenetic Uncertainty 👪 🪾
+#### Handling Phylogenetic Uncertainty 👪🪾
 
 As we described above, there's a lot of debate about how various groups of mammals and reptiles are related to one another. To perform phylogenetic comparative tests that could account for this uncertainty, we assembled 8 alternative maximally agnostic __supertrees__ relating all sampled species. These supertrees considered 3 pairs of competing phylogenetic hypotheses about how the various groups of amniotes in the dataset were related to one another. During each run of our analysis (whenever we trained a predictive model), we spontaneously collapsed each of these trees 10,000 times to remove polytomies and make the tree fully dichotomous, and repeated the model-training process once for each of these collapsed trees, so that we repeated the fitting procedure 10k times per run.
 
@@ -113,9 +113,10 @@ This approach could be repeated for any region of treespace (e.g., any individua
 
 ## Data Analysis Pipeline
 
-We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Grace High-Performance Computing Cluster at Yale University, using varying degrees of parallelization to accelerate computation. This section of the README contains a description of all script and data files that are included in the repository and required to rerun our analysis. The R scripts below are annotated to guide researchers through the steps of the analysis, and a diagram at the bottom of this README describes how they fit into the broader data analysis pipeline we used in this study.
+We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the [Grace High-Performance Computing Cluster](https://docs.ycrc.yale.edu/clusters/grace/) at Yale University, using varying degrees of parallelization to accelerate computation. This section of the README contains a description of all the input script and data files that are included in this repository. We then place these script files into the context of our data analysis pipeline.
 
 #### <u>We used the following six R scripts to run all of our data analyses</u>:
+> Note: The R scripts below are annotated to guide researchers through the steps of the analysis, and a diagram at the bottom of this README describes how they fit into the broader data analysis pipeline we used in this study.
 - [__script_S1.R__](R_scripts/script_S1.R): This script begins the analysis by processing the dataset, calibrating all supertrees, completing a few computationally inexpensive analyses, and defining original functions and R-objects required for downstream scripts.
   
 - [__script_S2.R__](R_scripts/script_S2.R): This script performs all phylogenetic ANOVAs, Levene’s tests, and post-hoc tests, and generates associated box plots and ternary plots referenced in the paper.
@@ -129,7 +130,7 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 - [__script_S6.Rmd__](R_scripts/script_S6.Rmd): This script contains all of the R code required to perform the geometric morphometric analyses associated with this study.
 
 #### <u>These R scripts work in tandem with the following bash scripts and job arrays</u>:
-- [__BASH_script_S1.sh__](bash_scripts/_BASH_script_S1.sh): This bash script runs R script_S1 on a high-performance computing cluster. 
+- [__BASH_script_S1.sh__](bash_scripts/_BASH_script_S1.sh): This _optional_ bash script runs R script_S1 on a high-performance computing cluster. We recommend running script_S1.R interactively and not via bash, but provide the option to make things faster if needed.
 - [__BASH_script_S2.sh__](bash_scripts/_BASH_script_S2.sh): This bash script runs R script_S2 on a high-performance computing cluster.
 - [__BASH_script_S3.sh__](bash_scripts/_BASH_script_S3.sh): This bash script runs R script_S3 on the associated job array as a batch job on a high-performance computing cluster.
 - [__BASH_script_S4.sh__](bash_scripts/_BASH_script_S4.sh): This bash script runs R script_S4 on the associated job array as a batch job on a high-performance computing cluster.
@@ -137,6 +138,7 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 - [__script_S4_joblist.txt__](job_arrays/script_S4_joblist.txt): This plain-text file contains the job array specified in BASH_script_S4.
 
 #### <u>These scripts make use of the following input data</u>:
+> Note: High-resolution PNGs of all trees are available for reference in this repo [here](input_data/highres_tree_images).
 - Input tree files (plain-text files in Newick format, representing alternative tree topologies for Pan-Reptilia):
   - [__supertree1.txt__](input_data/input_trees/Newick_files/supertree1.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, monophyletic Parareptilia at base of Pan-Reptilia, and molecular topology of Squamata
   - [__supertree2.txt__](input_data/input_trees/Newick_files/supertree2.txt): Tree assuming Hanosaurus at base of Sauropterygiformes, Captorhinidae at base of Pan-Reptilia, and molecular topology of Squamata
@@ -163,7 +165,8 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
 - Input data required for geometric morphometric (GM) analysis:
   - [__input_files_for_GM__](input_data/input_files_for_GM): Folder containing all the raw landmark coordinates, Procrustes coordinates, and curveslide files for the three geometric morphometric analyses performed in R script_S6
 
-#### To repeat this analysis, please follow the steps illustrated below. 
+#### The following diagram places these scripts and data files into the context of our data analysis pipeline:
+> Note: The *.RData files noted below are several Gb in size and not included in this repo. They are not strictly required to repeat the analysis, as they are generated during the completion of each script, but they do serve as important inputs to downstream scripts and may thus be helpful in allowing users to bypass earlier R scripts. These *.RData files are available for download on Figshare [here](https://doi.org/10.6084/m9.figshare.30395887).
 
 <p align="center">
      <img src="explanatory_images/data_analysis_pipeline.png"
@@ -171,3 +174,39 @@ We implemented the approach described above in R (v. 4.2.0-foss-2020b) on the Gr
      width="700"
      style="margin: auto; border: 5px solid #555;">
 </p>
+
+## Repeating This Analysis
+We end this README with a summary of system requirements and step-by-step instructions for repeating our analysis. Please note that system requirements below differ for the different steps of the analysis as illustrated above. For example, a high-performance computing cluster is required for running scripts S2–S4 but not scripts S1, S5, or S6. Similarly, different R packages are required for different scripts, so a full list of dependencies is not provided here, and a full list of script-specific dependencies are instead loaded at the beginning of each *.R file. Local or cloud storage requirements are also step-specific and listed in the diagram above.
+
+## System requirements:
+> Note: This list includes only those requirements for repeating our data _analysis_, but not for data _collection_. Thus, software programs like CT Pro 3D, VGStudio Max, and 3D Slicer, which were used to obtain, process, and measure specimen meshes for data collection, are not listed.
+- __R v. 4.2.0-foss-2020b or higher__: required for every step of the analysis (available for download [here](https://cran.rstudio.com))
+- __RStudio__: not required but highly recommended for R coding and package management (RStudio Desktop version available for download [here](https://posit.co/download/rstudio-desktop/))
+- __A high-performance computing cluster with >10,000 CPUs__: required for scripts S2–S4
+- __Terminal app or window__: required for submitting batch jobs on a high-performance computing cluster
+- Past3: not required but recommended for data visualization in script S6 (available for download [here](https://palaeo-electronica.org/2001_1/past/pastprog/index.html))
+
+## Steps for what to do next:
+> Note: The steps below assume that you have already read the original paper (including the STAR Methods) and the above README, and downloaded the necessary system requirements.
+### Step 0. <ins>To start, clone this repository</ins>.
+- You can manually download it from the GitHub repo page [here](https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amniotes-2025/tree/main).
+- Alternatively, after downloading git (available [here](https://git-scm.com)), you can type this in a Terminal window:
+     > git clone https://github.com/Caleb-M-Gordon/limb-proportions-aquatic-amniotes-2025.git
+- If you plan to repeat all steps of the analysis and use a high-performance computing cluster, be sure to clone the repository within your designated working directory on the cluster.
+### Step 1. <ins>Open R or RStudio and run script_S1.R interactively</ins>. 
+- As noted above, you can also run this script passively, by running _BASH_script_S1.sh from a Terminal window on the cluster.
+- Do not proceed to the next step until the script has finished running.
+### Step 2. <ins>From the cluster Terminal, run _BASH_script_S2.sh, _BASH_script_S3.sh, and _BASH_script_S4.sh</ins>. 
+- These BASH scripts will run script_S2.R, script_S3.R, and script_S4.R, respectively. These scripts not interdependent and can be run in parallel as needed. 
+- script_S2.R will be run using foreach loops, while script_S3.R and script_S4.R will be run as job arrays using the job list files script_S3_joblist.txt and script_S4_joblist.txt.
+- We recommend 48 CPUs for script S2 and 10,000 CPUs each for script S3 and script S4. Of the three, script S3 is the most computationally intensive.
+- Do not proceed to the next step until all of these scripts have finished running.
+### Step 3. <ins>Open R or RStudio and run script_S5.R interactively</ins>. 
+- This script is moderately computationally intensive but can be completed interactively using foreach loops with ≤ 48 CPUs.
+- Script S5 script concludes the major portion of the data analytical pipeline for this project, concerning aquatic affinity and linear morphometric data.
+### Step 4. _Optional:_ <ins>Open RStudio and run script_S6.R interactively</ins>.
+- This script performs the separate but complementary geometric morphometric portion of the analysis.
+- The script contains instructions for landmarking and visualizing data in ImageJ and Past3 as needed.
+- Input specimen images are not provided, but the raw landmark data for all images are available within the input_data/input_files_for_GM folder.
+### Step 5. Let me know how it goes!
+- I'd love to hear your thoughts and feedback. If you have any recommendations for how to improve or streamline this analysis, feel free to reach me via email or through the contact form on my website [here](https://www.calebmgordon.com/contact).
