@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --output /home/cmg89/palmer_scratch/output_files/script_S4_array_%A/%N/slurm-%A_%a.out
+##### GIVE SBATCH DIRECTIVES #####
+#SBATCH --output /R_scripts/script_S4_array_%A/%N/slurm-%A_%a.out
 #SBATCH --array 0-9215
 #SBATCH --job-name dsq-script_S4_joblist
 #SBATCH --mem-per-cpu 4g -p day -t 1- --mail-type ALL
