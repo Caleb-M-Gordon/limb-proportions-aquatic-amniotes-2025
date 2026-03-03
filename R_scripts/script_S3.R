@@ -1,6 +1,6 @@
 #** Third R script (script_S3.R) for Gordon et al., "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes."**
 
-#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper. 
+#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same repo should cite the original Current Biology paper, as described in the README. 
 
 # NOTE ON READABILITY: This script contains many long, multi-line comments. To increase readability within Rstudio, go to Tools > Global Options, select the 'Code' tab, and check 'Soft-wrap R source files'. This will wrap all lines of code to match your personal GUI's margins, so that no lines of code run offscreen.
 
@@ -49,7 +49,7 @@ cat("\n","PROGRESS REP: chunk [S3.1.01] complete; starting next chunk..","\n")
 
 #*-----**{ [S3.1.02] Load script_S1 environment. }*
 # Define working directory path:
-wd_path <- "/gpfs/gibbs/project/bhullar/cmg89/Flipper_Project/"
+wd_path <- here()
 setwd(wd_path); getwd()
 # Load script_S1 environment from working directory:
 load(file=paste0(wd_path, "/R_ENVIR_for_script_S1.RData"))
