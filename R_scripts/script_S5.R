@@ -383,19 +383,13 @@ cat("\n","PROGRESS REP: chunk [S5.1.06] complete; starting next chunk..","\n")
 
 # The code for the sensitivity analysis in section [S5.2] below was written by Lisa Freisem. 
 
-# NOTE: The code below was written and run on a separate local computer, and the directory paths therefore differ from the others assumed throughout the script. Directory paths may thus need to be changed before successfully running the code below.
+# TROUBLESHOOTING NOTE: The code below was written and run on a separate local computer, and the directory paths therefore originally differ from the others assumed throughout the script. Directory paths may thus need to be adjusted before successfully running the code below.
 
 #*-----**{ [S5.2.01] Prepare coding environment for sensitivity analysis.}*
-# Define working directory path: 
-wd_path <- "C:/Users/lisaj/Desktop/Flipper sensitivity script 10_26"
-setwd(wd_path); getwd()
-input_path  <- "C:/Users/lisaj/Desktop/Flipper sensitivity script 10_26/input"
-output_path <- "C:/Users/lisaj/Desktop/Flipper sensitivity script 10_26/output"
-
 # Load csv files:
-phybLR_metadata <- read.csv(file = paste0(input_path, "/_ALL_phybLR_metadata.csv"))
-phycorr_metadata <- read.csv(file = paste0(input_path, "/_ALL_phycorr_metadata.csv"))
-phyloBoxPlot_metadata <- read.csv(paste0(input_path, "/_ALL_phyloBoxPlot_metadata.csv"))
+phybLR_metadata <- read.csv(file = paste0(output_path, "/_ALL_phybLR_metadata.csv"))
+phycorr_metadata <- read.csv(file = paste0(output_path, "/_ALL_phycorr_metadata.csv"))
+phyloBoxPlot_metadata <- read.csv(paste0(output_path, "/_ALL_phyloBoxPlot_metadata.csv"))
 
 # Create phyloBoxPlot dataset where each phyloLev and phylANOVA posthoc value has its own row, store original metadata as separate variable. Store original format as phyloBoxPlot_metadata_original
 phyloBoxPlot_metadata_original <- phyloBoxPlot_metadata
