@@ -26,7 +26,7 @@ module list # checks to see that the correct modules are loaded
 ##### EXECUTE THE BATCH JOB #####
 
 # Set working directory (in which R script is located):
-cd /home/cmg89/project/Flipper_Project/
+cd /R_scripts
 
-# Run most recent R script:
-Rscript script_S2_2024.09.11.R
+# Run the correct R script:
+Rscript script_S2.R
