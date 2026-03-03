@@ -1289,7 +1289,7 @@ cat("\n","PROGRESS REP: chunk [S1.4.04] complete; starting next chunk...","\n")
   k_max=length(corvariables)
   
   # Specify output file connection:  
-  sink(file = paste0(wd_path, "/job_arrays/script_S3_joblist.txt"))
+  sink(file = paste0(wd_path, "/R_scripts/script_S3_joblist.txt"))
   
   # Populate output file:
   for(i in 1:i_max){
@@ -1316,7 +1316,7 @@ cat("\n","PROGRESS REP: chunk [S1.4.04] complete; starting next chunk...","\n")
   L_max=length(baremin_ratio_vars)
   
   # Specify output file connection:  
-  sink(file = paste0(wd_path, "/job_arrays/script_S4_joblist.txt"))
+  sink(file = paste0(wd_path, "/R_scripts/script_S4_joblist.txt"))
   
   # Populate output file:
   for(i in 1:i_max){
