@@ -1,6 +1,6 @@
 #** Fourth R script (script_S4.R) for Gordon et al., "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes."**
 
-#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper. 
+#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same repo should cite the original Current Biology paper, as described in the README. 
 
 # NOTE ON READABILITY: This script contains many long, multi-line comments. To increase readability within Rstudio, go to Tools > Global Options, select the 'Code' tab, and check 'Soft-wrap R source files'. This will wrap all lines of code to match your personal GUI's margins, so that no lines of code run offscreen.
 
@@ -59,7 +59,7 @@ cat("\n","PROGRESS REP: chunk [S4.1.01] complete; starting next chunk..","\n")
 
 #*-----**{ [S4.1.02] Load script_S1 environment. }*
 # Define working directory path:
-wd_path <- "/gpfs/gibbs/project/bhullar/cmg89/Flipper_Project/"
+wd_path <- here()
 setwd(wd_path); getwd()
 # Load script_S1 environment from working directory:
 load(file=paste0(wd_path, "/R_ENVIR_for_script_S1.RData"))
@@ -246,7 +246,7 @@ write.csv(phybLR_run_metadata, paste0(phybLR_directory_path, "/phybLR_metadata -
 cat("\n","PROGRESS REP: chunk [S4.3.01] complete; script_S4 has finished running!","\n")
 #*-----**-----*
 
-# We have just saved a table containing the phybLR() results from one run of this job array, which includes three rows--one run on raw data, one on log10-transformed data, and one run on BoxCox-transformed data--for the same input tree, input dataset, and variable pair. Running this script in massively parallel fashion with Job Arrays will generate many such output CSV files, which we will stitch together in script_S5. If you have any questions about this script or its associated data, please feel free to contact me anytime via the address below.
+# We have just saved a table containing the phybLR() results from one run of this job array, which includes three rows--one run on raw data, one on log10-transformed data, and one run on BoxCox-transformed data--for the same input tree, input dataset, and variable pair. Running this script in massively parallel fashion with Job Arrays will generate many such output CSV files, which we will stitch together in script_S5. If you have any questions about this script or its associated data, please feel free to contact me via the address below.
 
 # -- Caleb Gordon (c.gordon@yale.edu)
 #------------------------------------------------------------------------------
