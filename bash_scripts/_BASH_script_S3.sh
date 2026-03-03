@@ -25,9 +25,9 @@ module list # checks to see that the correct modules are loaded
 ##### EXECUTE THE BATCH JOB #####
 
 # Set working directory (in which job list and R script are located):
-cd /home/cmg89/project/Flipper_Project/
+cd /R_scripts
 
-# Run the correct job array:
-/vast/palmer/apps/avx2/software/dSQ/1.05/dSQBatch.py --job-file /gpfs/gibbs/project/bhullar/cmg89/Flipper_Project/script_S3_joblist.txt --status-dir /gpfs/gibbs/project/bhullar/cmg89/Flipper_Project
+# Run the correct job array: (NOTE that the file paths below may need to change for the script to run on your cluster!)
+/vast/palmer/apps/avx2/software/dSQ/1.05/dSQBatch.py --job-file /R_scripts/script_S3_joblist.txt --status-dir /R_scripts
 
 
