@@ -1,9 +1,9 @@
 #** First R script (script_S1.R) for Gordon et al., "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes."**
-#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper. 
+#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper (see README). 
 
 # NOTE ON READABILITY: This script contains many long, multi-line comments. To increase readability within Rstudio, go to Tools > Global Options, select the 'Code' tab, and check 'Soft-wrap R source files'. This will wrap all lines of code to match your personal GUI's margins, so that no lines of code or explanation run offscreen or cutoff at weird places.
 
-# INTRODUCTION: In this R script, we will walk through all the steps involved in analyzing the linear morphometric ("LM") data associated with the Nature Ecology & Evolution manuscript "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes." Our intention is for anyone with experience coding and performing statistical analysis to be able to follow the steps below. If you have any questions about this Rmd file or the analyses we ran, please feel free to email the corresponding author of this manuscript (c.gordon@yale.edu).
+# INTRODUCTION: In this R script, we will walk through all the steps involved in analyzing the linear morphometric ("LM") data associated with the Nature Ecology & Evolution manuscript "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes." Our intention is for anyone with experience coding and performing statistical analysis to be able to follow the steps below.
 
 # For this project, we generated >11,500 original limb bone measurements from >700 amniote specimens. We scored extant taxa in our dataset for their known aquatic habits (e.g., whether they are fully terrestrial, transiently aquatic, moderately aquatic, highly aquatic, or fully aquatic), their known soft-tissue limb morphologies (e.g., whether their hands are unwebbed, webbed, or flippered), their IUCN Red List status, and a number of other categorical variables. We began our analysis by cleaning the data, performing some measurement-quality-control tests (eg, Bland-Altman analysis), and generating eight alternative time-calibrated supertrees to account for differing hypotheses of phylogenetic relationships among the taxa in our dataset. We then evaluated general patterns and trends in the data——testing for associations among levels of different categorical variables (eg, soft-tissue limb morphology and aquatic habits), pairwise correlations between quantitative (LM) variables, limb proportion patterns within ternary morphospace, and significant differences in the mean and variance of various limb- and limb-bone shape metrics among groups for each categorical variable. Next, we used a phylogenetically informed machine-learning approach to predict the aquatic habits and soft-tissue limb phenotypes of extinct species: This involved training phylogenetic binomial logistic regression models on extant taxa, assessing the relative predictive accuracies of different models using Receiver Operating Characteristic (ROC) curve analysis, using the most accurate models to predict the phenotypes of extinct taxa within our dataset, and using the results of the best models, in tandem with ancestral-state reconstructions, to reconstruct the evolutionary history of flippers and aquatic habits along each major lineage of aquatic amniotes.
 
@@ -63,6 +63,8 @@
 
 # WHAT FOLLOWS IS THE FULL PIPELINE FOR SCRIPT_S1, SORTED IN SECTIONS LABELED BY THE STEPS ABOVE. EACH MAJOR S1 STEP IS TITLED BELOW, AS ARE INDIVIDUAL "CHUNKS" OF CODE, INTENDED TO COMPLETE A PARTICULAR COMPLEX TASK.
 
+# These "chunks" are written manually, rather than in markdown (e.g., as *.Rmd files), to remove errors associated with certain interactive functions and make it easier to run the R scripts directly from a Terminal window using bash.
+
 #**"-------------------------------------------------------------------------"*
 #**"------------ ### [[S1.1]] PREPARE CODING ENVIRONMENT ### ----------------"*
 #**"-------------------------------------------------------------------------"*
@@ -75,6 +77,10 @@ cat("\n","PROGRESS REP: chunk [S1.1.01] complete; starting next chunk...","\n") 
 
 #*-----**{ [S1.1.01] Load required packages. }*
 # NOTE: Optional installation lines are given above each library() command.
+# File path specification:
+  #install.packages('here')
+library(here)
+
 # Parallel programming on multiple CPU cores:
  #install.packages('parallel')
 library(parallel)
@@ -101,6 +107,8 @@ library(dplyr) # useful for in-task parallelization (eg, running function across
 # Data visualization and exporting:
  #install.packages('ggplot2')
 library(ggplot2) # for effective data visualization with ggplot suite
+  #install.packages('scales')
+library(scales)
 #install.packages("MESS") 
 library(MESS) # for specifying translucent colors as function arguments
  #install.packages('ggrepel')
@@ -121,12 +129,14 @@ library(corrplot) # For correlogram construction
  #install.packages('ggimage')
 library(ggimage) # For exporting ggplots
 
-# Data analysis:
+# Package management: 
  #install.packages('devtools')
 library(devtools) # required for downloading some packages from github
  #install.packages('BiocManager')
 library(BiocManager) # required for downloading some packages from BiocManager
  #install.packages('BlandAltmanLeh')
+
+# Statistical tests:
 library(BlandAltmanLeh) # For Bland-Altman analysis
  #install.packages('vcd')
 library(vcd) # for Cramer's V and other association stats
@@ -172,14 +182,14 @@ cat("\n","PROGRESS REP: chunk [S1.1.02] complete; starting next chunk...","\n")
 #*-----**{ [S1.1.03] Define paths for output files. }*
 # Set the current date:
 sysdate <- Sys.Date()
-current_date <- gsub("-", ".", sysdate)
+current_date <- gsub("-", "_", sysdate)
 
 # Define working directory path:
-wd_path <- "/gpfs/gibbs/project/bhullar/cmg89/Flipper_Project/"
+wd_path <- here()
 setwd(wd_path); getwd()
 
 # Create subdirectory for current run of the script (all output files will be saved to this path):
-output_path <- paste(wd_path, current_date, sep="") 
+output_path <- paste(wd_path, "/", current_date, sep="") 
 
 # Create directory for output files:
 dir.create(path=output_path, showWarnings=TRUE, recursive=FALSE, mode="0777") 
@@ -189,7 +199,7 @@ cat("\n","PROGRESS REP: chunk [S1.1.03] complete; starting next chunk...","\n")
 #*-----**{ [S1.1.04] Set up parallel programming environment. }*
 # We will use the foreach package to run programs in parallel on multiple CPU cores. The registerDoMC() function below assigns the proper number of cores for this task. Before you begin running the code below, set the CPU_num available to you on your personal computer or HPC cluster.
 
-CPU_num <- 4 # 6 is the total number of available processing cores on my MacBook. 48 is is the highest number that can be requested from Yale's High-Performance Computing cluster. 4 is the total number that can be requested interactively from Yale's HPC via Open On-Demand.
+CPU_num <- 4 # 8 is ideal, but 4 will be sufficient for fast computation; with 1 CPU, the script is feasible but may take up to an hour to run
 
 # Set up parallel backend:
 cl <- makeCluster(CPU_num, outfile = "") # outfile="" ensures that output prints to the console
@@ -198,10 +208,9 @@ cat("\n","PROGRESS REP: chunk [S1.1.04] complete; starting next chunk...","\n")
 #*-----**-----*
 
 #*-----**{ [S1.1.05] Import linear morphometric and Bland-Altman data. }*
-input_csv_name <- paste0("_LM_all_data_", current_date, ".csv")
-all_data_raw <- read.csv(input_csv_name)
+all_data_raw <- read.csv(paste0(wd_path, "/input_data/Table_S01.csv"))
 rownames(all_data_raw) <- all_data_raw$Tip_label
-BlandAltman_data <- read.csv(paste0("_BlandAltman_data_",current_date,".csv"))
+BlandAltman_data <- read.csv(paste0(wd_path, "/input_data/Table_S02.csv"))
 cat("\n","PROGRESS REP: chunk [S1.1.05] complete; starting next chunk...","\n")
 #*-----**-----*
 
@@ -248,7 +257,7 @@ head(all_data)
 
 # Optional extra troubleshooting steps: check for missing data:
   # dim(all_data); for(i in 1:length(colnames(all_data))){print(sum(is.na(all_data[, i])))} 
-      # No columns should have all (eg, 714) rows of missing data.
+  # No columns should have all rows of missing data.
 cat("\n","PROGRESS REP: chunk [S1.1.06] complete; starting next chunk...","\n")
 #*-----**-----*
 
@@ -868,7 +877,7 @@ cat("\n","PROGRESS REP: chunk [S1.2.03] complete; starting next chunk...","\n")
 
 #*-----**{ [S1.3.01] Define tree directory path and diagnostic functions. }*
 # Define subdirectory paths:
-tree_directory_path <- paste0(wd_path, "*input_trees_", current_date, "_run/")
+tree_directory_path <- paste0(wd_path, "/input_data/input_trees/Newick_files/")
 
 # Define function to align data to tree:
 reorder.data <- function(trimmed_tree, trimmed_dataset){
@@ -1193,9 +1202,10 @@ catPlot <- function(dataset, dataset_name, catVar1, catVar2) {
       colnames(df_count) <- c("catVar1", "catVar2", "freq")
   # Make the stacked barplot:
   catplot <- ggplot(df_count, aes(x = catVar1, y = freq, fill = catVar2)) +
-    geom_col(position = "fill", color = 'white', size = 1.4, alpha=0.8) + 
-    scale_y_continuous(labels = scales::percent_format()) +
-    labs(aes(x = catVar1, y = "Proportion", fill = catVar2)) +
+    geom_col(position = "fill", color = 'white', linewidth = 1.4, alpha=0.8) + 
+    scale_y_continuous(labels = scales::label_percent()) +
+    #scale_y_continuous(labels = function(x) sprintf("%.0f%%", 100 * x)) # This is an alternative version to the line directly above, in case label_percent() is incompatible with your current package versions of ggplot2 and/or scales.
+    labs(x = catVar1, y = "Proportion", fill = catVar2) +
     scale_fill_manual(values = fill_colors) + 
     theme(panel.grid = element_line(color = adjustcolor("white", alpha = 0.1)), panel.background = element_rect(fill = adjustcolor("grey10", alpha = 0.8)), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size=4))
   
@@ -1271,7 +1281,7 @@ cat("\n","PROGRESS REP: chunk [S1.4.04] complete; starting next chunk...","\n")
   boxcox_cor <- boxcox_mm[, key_quantitative_vars]
   corvariables <- names(all_cor)
   sysdate_string <- gsub(pattern="-", replacement=".", x=sysdate)
-  script_S3_name <- paste0("script_S3_", sysdate_string, ".R")
+  script_S3_name <- "script_S3.R"
 
   # Specify index lengths: 
   i_max=length(tree_variants)
@@ -1279,7 +1289,7 @@ cat("\n","PROGRESS REP: chunk [S1.4.04] complete; starting next chunk...","\n")
   k_max=length(corvariables)
   
   # Specify output file connection:  
-  sink(file = paste0(wd_path, "script_S3_joblist.txt"))
+  sink(file = paste0(wd_path, "/job_arrays/script_S3_joblist.txt"))
   
   # Populate output file:
   for(i in 1:i_max){
@@ -1297,7 +1307,7 @@ cat("\n","PROGRESS REP: chunk [S1.4.04] complete; starting next chunk...","\n")
   # Define modified data objects for script_S4:
     key_bLR_groupers <- c("bin_fweb", "bin_fflip", "bin_hweb", "bin_hflip", "bin_eco1_v1", "bin_eco1_v3", "bin_eco1_v4", "bin_eco1_v5", "bin_eco2") # This vector shortens the total number of binary grouping variables used for phylogenetic binomial logistic regression (phybLR) analyses, in order to reduce the total job array number to less than 10,000. Ideally, given greater computational resources, I would include bin_eco1_v8 and bin_eco1_v9 in this vector as well, but they can be input separately during a future run if needed.
     baremin_ratio_vars <- c("f_AZR","f_SZR","h_AZR","h_SZR", "mD_Symmetry_index1", "mD_Symmetry_index2", "pD_Symmetry_index1", "pD_Symmetry_index2", "mD3_up_FI1", "mD3_up_FI3", "pD3_up_FI1", "pD3_up_FI3", "mD3_proxp_Length.DistWidth", "mD3_proxp_WidthRatios", "pD3_proxp_Length.DistWidth", "pD3_proxp_WidthRatios") # This vector shortens the total number of informative ratio_vars used for phybLR analyses, in order to reduce the total job array number to less than 10,000. Ideally, given greater computing resources, I would include f_ASR, h_ASR, f_ANAR, and h_AnAR in this vector as well, but they can be input separately during a future run if needed.
-    script_S4_name <- paste0("script_S4_", sysdate_string, ".R")
+    script_S4_name <- "script_S4.R"
     
   # Specify index lengths: 
   i_max=length(bLR_raw_datasets)
@@ -1306,7 +1316,7 @@ cat("\n","PROGRESS REP: chunk [S1.4.04] complete; starting next chunk...","\n")
   L_max=length(baremin_ratio_vars)
   
   # Specify output file connection:  
-  sink(file = paste0(wd_path, "/", "script_S4_joblist.txt"))
+  sink(file = paste0(wd_path, "/job_arrays/script_S4_joblist.txt"))
   
   # Populate output file:
   for(i in 1:i_max){
@@ -1389,13 +1399,13 @@ phycorr <- function(input_ds, input_ds_name, corvar1, corvar2, input_tree_name, 
 # Test phycorr() function:
 corvar1_string <- "f_AZR"
 corvar2_string <- "Humerus"
-test_output <- phycorr(input_ds=all_mm, input_ds_name="all_mm", corvar1=corvar1_string, corvar2=corvar2_string, input_tree_name = "supertree1", method = optim_method,  REML = REML_verdict, constrain.d = constraind_verdict, maxit.NM = maxitNM_num)
+test_output <- phycorr(input_ds=all_mm, input_ds_name="all_mm", corvar1=corvar1_string, corvar2=corvar2_string, input_tree_name = "supertree1", method = optim_method,  REML = REML_verdict, constrain.d = constraind_verdict, maxit.NM = 2)
 cat("\n","PROGRESS REP: chunk [S1.5.02] complete; starting next chunk..","\n")
 #*-----**-----*
 
 # We have just defined the phycorr() function. We will run this function on every variable pair & tree combination for raw, log10-transformed, and BoxCox-transformed datasets by running script_S3 in parallel using Job Arrays. 
 
-# The next original function, phybLR(), will be used in our S4 scripts (S4a, S4b, S4c) to fit phylogenetic binomial logistic regression models to the data using the phylolm package [https://cran.r-project.org/web/packages/phylolm/index.html] and assess their accuracy using Receiver Operating Characteristic (ROC) curves. ROC analysis is a method for visualizing and comparing predictive model performance. This method was developed by U.S. military statisticians in World War II. We describe our usage of ROC analysis in more detail within our paper's Methods section, and a great introduction to the approach is given by Fawcett (2006) [doi:10.1016/j.patrec.2005.10.010]. In brief, ROC curves provide a quick way to richly visualize, transparently report, and clearly compare the performance of multiple competing predictive models--in our case, phylogenetic binomial logistic regression (phybLR) models.
+# The next original function, phybLR(), will be used in script_S4 to fit phylogenetic binomial logistic regression models to the data using the phylolm package [https://cran.r-project.org/web/packages/phylolm/index.html] and assess their accuracy using Receiver Operating Characteristic (ROC) curves. ROC analysis is a method for visualizing and comparing predictive model performance. This method was developed by U.S. Army Signal Corps World War II. We describe our usage of ROC analysis in more detail within our paper's STAR Methods section, and a great introduction to the approach is given by Fawcett (2006) [doi:10.1016/j.patrec.2005.10.010] as described in the README. In brief, ROC curves provide a quick way to richly visualize, transparently report, and clearly compare the performance of multiple competing predictive models--in our case, phylogenetic binomial logistic regression (phybLR) models.
 
 #*-----**{ [S1.5.03] Define phybLR() function. }*
 # This function fits a phylogenetic binomial logistic regression model with a single predictor variable, saves a predicted probability curve with associated model stats to the working directory, and returns the output sensitivity and specificity data for downstream ROC analysis. The phybLR() function works downstream of the bLRify(), rm.NAs(), trim.tree(), and reorder.data() functions defined in script_S1.
@@ -1645,8 +1655,9 @@ phybLR <- function(dataset_ordered, dataset_name, response, predictor, trimmed_t
             # Calculate p-val for McFadden's pseudo-Rsq:
             test_statistic <- (logLik(fullmod)[[1]] - logLik(nullmod)[[1]]) 
             # This test statistic is the difference in logLik values between the fitted and null models.
-            degrees_freedom <- logLik(fullmod)[[2]] - logLik(nullmod)[[2]] 
-            # This is the difference in degrees of freedom between the fitted and null models.
+            degrees_freedom <- attr(logLik_mod, "df") - attr(logLik_null, "df") # This is the difference in degrees of freedom between the fitted and null models.
+            #degrees_freedom <- logLik(fullmod)[[2]] - logLik(nullmod)[[2]] # This is an alternate version of the same line that may work with certain earlier versions of the stats package.
+            
             McF_pvals[r] <- (1 - pchisq(test_statistic, degrees_freedom)) 
             # This is the p-val derived from a chi-squared distribution of the test_statistic.
             
@@ -1879,8 +1890,6 @@ phybLR <- function(dataset_ordered, dataset_name, response, predictor, trimmed_t
           # Calculate p-val for McFadden's pseudo-Rsq:
           test_statistic <- (logLik(bLR_mod)[[1]] - logLik(nullmod)[[1]]) 
           # this test statistic is the diff in log likelihoods btwn models
-          degrees_freedom <- logLik(bLR_mod)[[2]] - logLik(nullmod)[[2]] 
-          # this is the diff in degrees of freedom btwn models
           McF_pval <- (1 - pchisq(test_statistic, degrees_freedom))
           # This is the p-val derived from a chisq distrib of the test stat.
           # Report the McF Rsq results:
@@ -1910,7 +1919,7 @@ phybLR <- function(dataset_ordered, dataset_name, response, predictor, trimmed_t
           TNR <- 1 - FPR
           TN <-  round(TNR*N,0) # Since TNR = TN/N 
           n_successes <- TP + TN
-          FNR <- 1-TPR #(wikipedia)
+          FNR <- 1-TPR 
           FN <- round(FNR*P,0) # Since FNR = FN/P
           n_failures <- FP + FN
           Accuracy <- round(((TP+TN)/(P+N)), 2)
@@ -1996,7 +2005,7 @@ cat("\n","PROGRESS REP: chunk [S1.5.03] complete; starting next chunk..","\n")
     phylo_tr <- trim.tree(tree=tree_variants[[1]], trimmed_dataset=bLR_tr)
     ds_ord <- reorder.data(trimmed_tree=phylo_tr, trimmed_dataset=bLR_tr)
   # Test phybLR() function:
-    test_bLR_output <- phybLR(dataset_ordered=ds_ord, dataset_name="***test_bLR_", response="bin_fflip", predictor="f_AZR", trimmed_tree=phylo_tr, tree_name = "phylo_tr", boot_num=1, btol_num=10, Kfold=3, CV_runs=5, crossval_reports=T, plot_td_ROCCs=T, plot_Youden=T, plot_McF=T, plot_CIs=T)
+    test_bLR_output <- phybLR(dataset_ordered=ds_ord, dataset_name="***test_bLR_", response="bin_fflip", predictor="f_AZR", trimmed_tree=phylo_tr, tree_name = "phylo_tr", boot_num=2, btol_num=30, Kfold=3, CV_runs=5, crossval_reports=T, plot_td_ROCCs=T, plot_Youden=T, plot_McF=T, plot_CIs=T)
   # Verify that phybLR() output object looks right:
     names(test_bLR_output)
 
@@ -2090,7 +2099,7 @@ cat("\n","PROGRESS REP: chunk [S1.5.10] complete; script_S1 is all done!","\n")
 
 # That concludes the first script in this data analysis pipeline. In this first script, we imported, cleaned, and processed all the LM data for this project; performed a quality-control assessment for LM measurements; read, time-calibrated, and aligned trees to the dataset for downstream phylogenetic statistical tests; began analyzing relationships among categorical variables; and defined job lists and custom functions for downstream scripts to run via batch jobs and Job Arrays. In the following scripts, we will make use of greater parallelization to rigorously assess how all LM data variables differ among groups within a phylogenetic framework (script_S2), systematically assess which quantitative LM variables are correlated (script_S3), and fit phylogenetic binomial logistic regression models to raw, log10-transformed, and BoxCox-transformed datasets (script_S4). Instructions for how to run these scripts from your own local laptop or high-performance computing (HPC) cluster are given in chunks [S1.5.09] and [S1.5.10] above. Once scripts S2, S3, and S4 have finished running, you can open and begin script_S5, in which you will use the combined outputs from all upstream scripts to reconstruct the evolutionary histories of aquatic habits and soft-tissue phenotypes in amniotes, generate some nice plots to visualize pairwise correlations, and run a comprehensive sensitivity analysis to investigate how tree topology and data transformation method alter the results of all previously run phylogenetic statistical tests.
 
-# I hope you have enjoyed this coding journey so far, and that you continue onward to script_S5! In the meantime, if you have any questions about this script or its associated data, or if you would like to discuss a possible collaboration, please feel free to contact me anytime via the address below.
+# I hope you have enjoyed this coding journey so far, and that you continue onward to script_S5! In the meantime, if you have any questions about this script or its associated data, please feel free to contact me anytime via the address below.
 
 # -- Caleb Gordon (c.gordon@yale.edu)
 #------------------------------------------------------------------------------
