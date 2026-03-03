@@ -1,6 +1,6 @@
 #** Fifth R script (script_S5.R) for Gordon et al., "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes."**
 
-#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper. 
+#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same repo should cite the original Current Biology paper, as described in the README. 
 
 # NOTE ON READABILITY: This script contains many long, multi-line comments. To increase readability within Rstudio, go to Tools > Global Options, select the 'Code' tab, and check 'Soft-wrap R source files'. This will wrap all lines of code to match your personal GUI's margins, so that no lines of code run off-screen.
 
@@ -80,7 +80,7 @@ cat("\n","PROGRESS REP: chunk [S5.1.01] complete; starting next chunk..","\n")
 
 #*-----**{ [S5.1.02] Load upstream upstream S1 & S2 script environments. }*
 # Define working directory path:
-wd_path <- "/gpfs/gibbs/project/bhullar/cmg89/Flipper_Project/"
+wd_path <- here()
 setwd(wd_path); getwd()
 # Load upstream script environments from scripts S1 & S2:
 load(file=paste0(wd_path, "/R_ENVIR_for_script_S1.RData")) # S1 output
@@ -91,7 +91,7 @@ cat("\n","PROGRESS REP: chunk [S5.1.02] complete; starting next chunk..","\n")
 #*-----**{ [S5.1.03] Set up parallel programming environment. }*
 # We will use the foreach package to run programs in parallel on multiple CPU cores. The registerDoMC() function below assigns the proper number of cores for this task. Before you begin running the code below, set the CPU_num available to you on your personal computer or HPC cluster.
 
-CPU_num <- 8 # On Yale's High-Performance Computing cluster, 5 is the total number of processing cores that can be requested for interactive work, whereas 48 is the highest number that can be requested for batch jobs.
+CPU_num <- 8 # You may need to change the code within chunk [S5.5.03] below if you change the number of CPUs you use.
 
 # Set up parallel backend:
 cl <- makeCluster(CPU_num, outfile = "") # outfile="" ensures that output prints to the console
@@ -321,7 +321,6 @@ cat("\n","PROGRESS REP: chunk [S5.1.05] complete; starting next chunk..","\n")
 
 #*-----**{ [S5.1.06] Load & stitch script_S4 outputs for downstream work. }*
 phybLR_output_path <- paste0(output_path,"/phybLR_models/") # navigates to the correct directory for phybLR outputs
-phybLR_output_path <- "~/project/Flipper_Project/phybLR_models/" ### TO DELETE ###
 phybLR_all_outputs <- list.files(phybLR_output_path) # lists all files there
 phybLR_CSVs<-grep(pattern="phybLR_metadata",phybLR_all_outputs,value=TRUE) # picks out key files representing metadata CSVs to target for stitching
 
@@ -1491,10 +1490,6 @@ for(t in 1:length(tree_names)){
       # Report completion of filter_bLR_mods calls for this iteration:
       cat("\n", "Filtering complete for this iteration. Now selecting best models...", "\n")
       
-      #### PORTION TO DELETE ####
-      cat("\n", "length(f_props_mods):", length(f_props_mods), ", length(f_acr_mods):", length(f_acr_mods), ", length(f_ungp_mods):", length(f_ungp_mods), ", length(f_proxp_mods):", length(f_proxp_mods), "\n")
-      #### PORTION TO DELETE ####
-      
       # NEXT: Check to make sure there are models with the selected criteria:
       if( length(f_props_mods)==0 | length(f_acr_mods)==0 | length(f_ungp_mods)==0 | length(f_proxp_mods)==0 ) {
         cat("\n", "WARNING: phycROCCs has skipped this iteration because at least one set of models failed to meet the selection criteria.", "\n", "It may be that there are no data for at least one of the levels of the current binary response variable in the selected dataset.", "\n")
@@ -2351,7 +2346,7 @@ cat("\n","PROGRESS REP: chunk [S5.6.04] is complete.", "\n", "script_S5 has fini
 
 cat("\n","PROGRESS REP.: All chunks done! Data analysis complete!","\n")
 
-# The steps above conclude our data analysis pipeline for linear morphometric data. Taken as a whole, this pipeline interrogated and described the largest dataset of amniote-wide limb measurements to date within a phylogenetic framework, and applied a rigorous machine-learning approach to predict the aquatic affinities and soft-tissue limb phenotypes of many extinct amniote fossils and their common ancestors. Thank you for taking this coding journey and congrats on making it to the end! If you have any questions about this data analysis pipeline, please do not hesitate to email with any questions.
+# The steps above conclude our data analysis pipeline for linear morphometric data. Taken as a whole, this pipeline interrogated and described the largest dataset of amniote-wide limb measurements to date within a phylogenetic framework, and applied a rigorous machine-learning approach to predict the aquatic affinities and soft-tissue limb phenotypes of many extinct amniote fossils and their common ancestors. Thank you for taking this coding journey and congrats on making it to the end! If you have any questions about this data analysis pipeline, please feel free to email with any questions.
 
 # Sincerely,
 # Caleb Gordon (c.gordon@yale.edu)
