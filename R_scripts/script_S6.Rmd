@@ -13,11 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Sixth R script (script_S6.Rmd) for Gordon et al., "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes."
 
-This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper. 
+#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same repo should cite the original Current Biology paper, as described in the README. 
 
 NOTE ON READABILITY: This script contains many long, multi-line comments. To increase readability within Rstudio, go to Tools > Global Options, select the 'Code' tab, and check 'Soft-wrap R source files'. This will wrap all lines of code to match your personal GUI's margins, so that no lines of code run offscreen.
 
 NOTE ON SCRIPT ORIGIN: Please note that this single Rmd file was compiled on October 3rd, 2024, from earlier R scripts originally written in 2020 and 2022, and some R functions may have since become deprecated. Please proceed with caution and, whenever possible, use R v. 4.2.0-foss-2020b to minimize unnecessary error messages.
+
+NOTE ON SCRIPT INPUTS: This script contains ALL the code used during the geometric morphometric portion of the project. Much of the script will thus not be relevant or repeatable for you. For example, some of the script involves converting specimen image file types in bulk or provides the option to landmark those images interactively, but the source images for museum specimens are not provided in bulk in this repo for copyright reasons (instead, I provided the original landmark data generated from landmarking them). Thus, you will not be able to run through the entire script from start to finish, and much of this script can be skipped or skimmed.
 
 NOTE ON SCRIPT TASKS: Herein, we will run three GM analyses: one for the forelimb zeugoautopod, one for the forelimb acropodium, and one for the ungual phalanx. In each, we will begin by converting image files to be landmarked so that they are in the correct format, define required grouping variables and data objects, optionally proceed with landmark using R geomorph's digitize2d function (alternatively, you can place landmarks in ImageJ), define sliders, perform a generalized procrustes superimposition of all raw landmark coordinates, perform a Principal Coordinates Analysis (PCA) and PERMANOVAs in PAST, and then compare individual PC scores among groups in R.
 
@@ -39,7 +41,8 @@ library(car)
 library(ggplot2)
 
 # Write path of your working directory to an object, to make later steps easier:
-base_dir <- "/Users/caleb/Desktop/Flippers_KEY/Flipper GM files PRESSING/CURRENT SPECIMENS"
+base_dir <- here()
+setwd(base_dir); getwd()
 ```
 
 ### ---------------- [GM ANALYSIS 1] ZEUGOAUTOPOD PLANFORM ---------------- ###
@@ -129,15 +132,14 @@ Once you place landmarks on all of your specimens, you can move on to the next s
 
 ```{r Define sliders.}
 # Read your raw_coordinates.txt file to an object to make downstream work easier:
-raw_coordinates <- readland.tps("/Users/caleb/Desktop/Flippers_KEY/Flipper GM files PRESSING/CURRENT SPECIMENS/raw_coordinates.txt", specID = "ID") # This object contains the raw pixel coordinates of all of your landmarks for each specimen.
-
+raw_coordinates <- readland.tps(paste0(base_dir, "/raw_coordinates.txt"), specID = "ID") # This object contains the raw pixel coordinates of all of your landmarks for each specimen.
 # The following code lets you manually (and retroactively) define sliders for all of your specimens in the RStudio GUI.
 define.sliders(landmarks = raw_coordinates, nsliders = 20, surfsliders = NULL, write.file = TRUE)
 #—————————Note: Do not run this command from within the chunk. Copy and paste this code into the R console window and run it there.
 #—————————This command will have you define sliders for your first specimen, and then write them to the csv file "curveslide.csv". But the sliders are the same for all specimens, so this is ultimately all you need.
 
 # Now write the slider data to an object for downstream use:
-sliders <- as.matrix(read.csv("/Users/caleb/Desktop/Flippers_KEY/Flipper GM files PRESSING/CURRENT SPECIMENS/curveslide.csv", header=T)) 
+sliders <- as.matrix(read.csv(paste0(base_dir, "/curveslide.csv"), header=T)) 
 #This file will be one of the direct inputs for Generalized Procrustes Analysis.
 ```
 
@@ -350,7 +352,7 @@ define.sliders(landmarks = raw_coordinates, nsliders = 20, surfsliders = NULL, w
 #—————————This command will have you define sliders for your first specimen, and then write them to the csv file "curveslide.csv". But the sliders are the same for all specimens, so this is ultimately all you need.
 
 # Now write the slider data to an object for downstream use:
-sliders <- as.matrix(read.csv("/Users/caleb/Desktop/Flippers_KEY/Flipper GM files PRESSING/CURRENT SPECIMENS/curveslide.csv", header=T)) 
+sliders <- as.matrix(read.csv(paste0(base_dir, "/curveslide.csv"), header=T)) 
 #This file will be one of the direct inputs for Generalized Procrustes Analysis.
 ```
 
