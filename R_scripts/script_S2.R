@@ -1,6 +1,6 @@
 #** Second R script (script_S2.R) for Gordon et al., "Limb proportions predict aquatic habits and soft-tissue flippers in extinct amniotes."**
 
-#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same Figshare submission (https://doi.org/10.6084/m9.figshare.30395887) should cite the original Current Biology paper. 
+#* This script is protected under a standard MIT Code License. Any new works that use or reference this script or other files from the same repo should cite the original Current Biology paper, as described in the README. 
 
 # NOTE ON READABILITY: This script contains many long, multi-line comments. To increase readability within Rstudio, go to Tools > Global Options, select the 'Code' tab, and check 'Soft-wrap R source files'. This will wrap all lines of code to match your personal GUI's margins, so that no lines of code run offscreen.
 
@@ -80,7 +80,7 @@ cat("\n","PROGRESS REP: chunk [S2.1.02] complete; starting next chunk...","\n")
 
 #*-----**{ [S2.1.03] Load script_S1 environment and set iter_num. }*
 # Define working directory path:
-wd_path <- "/gpfs/gibbs/project/bhullar/cmg89/Flipper_Project/"
+wd_path <- here()
 setwd(wd_path); getwd()
 # Load script_S1 environment from working directory:
 load(file=paste0(wd_path, "/R_ENVIR_for_script_S1.RData"))
@@ -1352,7 +1352,7 @@ sink(file=NULL) # A text file saving the time elapsed for the completion of this
 cat("\n","PROGRESS REP: chunk [S2.5.04] complete; script_S2 has finished running!","\n")
 #*-----**-----*
 
-# That concludes script_S2 in our data analysis pipeline. In this script, we ran all phylogenetic comparative tests involved in assessing how single quantitative variables differed among groups. In the downstream script S5, after scripts S2-S4 are all done running, you will see whether these test results differed by data-transformation method and tree topology. I hope you have enjoyed this coding journey so far, and that you continue onward to script_S5! In the meantime, if you have any questions about this script or its associated data, or if you would like to discuss a possible collaboration, please feel free to contact me anytime via the address below.
+# That concludes script_S2 in our data analysis pipeline. In this script, we ran all phylogenetic comparative tests involved in assessing how single quantitative variables differed among groups. In the downstream script S5, after scripts S2-S4 are all done running, you will see whether these test results differed by data-transformation method and tree topology. If you have any questions about this script or its associated data, please feel free to contact me via the address below.
 
 # -- Caleb Gordon (c.gordon@yale.edu)
 #------------------------------------------------------------------------------
